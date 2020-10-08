@@ -1,6 +1,4 @@
-# Basic Node API Scaffold
-
-Welcome to your `Basic Node API Repository`. Use this to start your own Greenfield Project using nodejs, express and common industry standards.
+# Maikana Foods API
 
 This repository assumes a handful of industry practices and standards. We strive to keep you on the bleeding edge of the industry and as a result, we have made some opinions for you so that you don't have to; you're welcome.
 
