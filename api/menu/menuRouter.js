@@ -1,5 +1,4 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired');
 const Menus = require('./menuModel');
 const router = express.Router();
 
@@ -49,7 +48,7 @@ const router = express.Router();
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, function (req, res) {
+router.get('/', function (req, res) {
   Menus.findAll()
     .then((menus) => {
       res.status(200).json(menus);
@@ -95,7 +94,7 @@ router.get('/', authRequired, function (req, res) {
  *      404:
  *        description: 'Menu not found'
  */
-router.get('/:id', authRequired, function (req, res) {
+router.get('/:id', function (req, res) {
   const id = String(req.params.id);
   Menus.findById(id)
     .then((menu) => {
@@ -146,7 +145,7 @@ router.get('/:id', authRequired, function (req, res) {
  *                menu:
  *                  $ref: '#/components/schemas/Menu'
  */
-router.post('/', authRequired, async (req, res) => {
+router.post('/', async (req, res) => {
   const menu = req.body;
   if (menu) {
     const id = menu.id || 0;
@@ -203,7 +202,7 @@ router.post('/', authRequired, async (req, res) => {
  *                menu:
  *                  $ref: '#/components/schemas/Menu'
  */
-router.put('/', authRequired, (req, res) => {
+router.put('/', (req, res) => {
   const menu = req.body;
   if (menu) {
     const id = menu.id || 0;
