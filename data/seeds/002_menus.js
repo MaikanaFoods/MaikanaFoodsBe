@@ -6,10 +6,10 @@ exports.seed = function (knex) {
     .then(function () {
       // Inserts seed entries
       return knex('menus').insert([
-        { id: faker.random.alphaNumeric(10), name: 'Breakfast' },
-        { id: faker.random.alphaNumeric(10), name: 'Lunch' },
-        { id: faker.random.alphaNumeric(10), name: 'Dinner' },
-        { id: faker.random.alphaNumeric(10), name: 'Vegan' },
+        { id: 1, name: 'Breakfast' },
+        { id: 2, name: 'Lunch' },
+        { id: 3, name: 'Dinner' },
+        { id: 4, name: 'Vegan' },
       ]);
     });
 };

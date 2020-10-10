@@ -1,5 +1,6 @@
 const express = require('express');
 const Menus = require('./menuModel');
+const Food = require('../food/foodModel');
 const router = express.Router();
 
 /**
@@ -111,6 +112,65 @@ router.get('/:id', function (req, res) {
 
 /**
  * @swagger
+ * components:
+ *  parameters:
+ *    menuId:
+ *      name: id
+ *      in: path
+ *      description: ID of the menu to return
+ *      required: true
+ *      example: 00uhjfrwdWAQvD8JV4x6
+ *      schema:
+ *        type: string
+ *
+ * /menu/{id}:
+ *  get:
+ *    description: Find menus by ID
+ *    summary: Returns a single menu
+ *    security:
+ *      - okta: []
+ *    tags:
+ *      - menu
+ *    parameters:
+ *      - $ref: '#/components/parameters/menuId'
+ *    responses:
+ *      200:
+ *        description: A menu object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Menu'
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      404:
+ *        description: 'Menu not found'
+ */
+
+router.get('/:id/foods', function (req, res) {
+  const id = String(req.params.id);
+  Menus.findById(id)
+    .then((menu) => {
+      if (menu) {
+        Food.findByMenuId(menu.id)
+          .then((foods) => {
+            menu = { ...menu, foods };
+            res.status(200).json(menu);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({ message: err.message });
+          });
+      } else {
+        res.status(404).json({ error: 'MenuNotFound' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+/**
+ * @swagger
  * /menu:
  *  post:
  *    summary: Add a menu
@@ -145,6 +205,7 @@ router.get('/:id', function (req, res) {
  *                menu:
  *                  $ref: '#/components/schemas/Menu'
  */
+
 router.post('/', async (req, res) => {
   const menu = req.body;
   if (menu) {
