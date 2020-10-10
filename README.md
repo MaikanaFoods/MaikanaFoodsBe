@@ -1,12 +1,11 @@
-# Basic Node API Scaffold
-
-Welcome to your `Basic Node API Repository`. Use this to start your own Greenfield Project using nodejs, express and common industry standards.
+# Maikana Foods API
 
 This repository assumes a handful of industry practices and standards. We strive to keep you on the bleeding edge of the industry and as a result, we have made some opinions for you so that you don't have to; you're welcome.
 
 Read more at <https://docs.labs.lambdaschool.com/labs-api-strarter/>
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=labs-api-starter&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=labs-api-starter)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaikanaFoods_MaikanaFoodsBe&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=labs-api-starter)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaikanaFoods_MaikanaFoodsBe&metric=coverage)](https://sonarcloud.io/dashboard?id=MaikanaFoods_MaikanaFoodsBe)
 
 ## Requirements
 
@@ -22,8 +21,6 @@ Labs teams must follow all [Labs Engineering Standards](https://labs.lambdaschoo
     - 3000
     - 8000
     - 8080
-- `DS_API_URL` - URL to a data science api. (eg. <https://ds-bw-test.herokuapp.com/>)
-- `DS_API_TOKEN` - authorization header token for data science api (eg. SUPERSECRET)
 - `DATABASE_URL` - connection string for postgres database
 - `OKTA_URL_ISSUER` - The complete issuer URL for verifying okta access tokens. `https://example.okta.com/oauth2/default`
 - `OKTA_CLIENT_ID` - the okta client ID.
