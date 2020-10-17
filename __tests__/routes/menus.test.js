@@ -85,7 +85,6 @@ describe('menus router endpoints', () => {
         },
       ]);
       const res = await request(server).get('/menus/1/foods');
-      console.log(res);
       expect(res.status).toBe(200);
       expect(res.body.name).toBe('Breakfast');
       expect(res.body.foods.length).toBe(3);

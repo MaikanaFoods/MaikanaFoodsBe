@@ -1,14 +1,13 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
-const Menus = require('./menuModel');
-const Food = require('../food/foodModel');
+const Foods = require('./foodModel');
 const router = express.Router();
 
 /**
  * @swagger
  * components:
  *  schemas:
- *    Menu:
+ *    food:
  *      type: object
  *      required:
  *        - id
@@ -21,39 +20,39 @@ const router = express.Router();
  *          type: string
  *      example:
  *        id: '00uhjfrwdWAQvD8JV4x6'
- *        name: 'Breakfast menu'
+ *        name: 'Breakfast food'
  *
- * /menus:
+ * /foods:
  *  get:
- *    description: Returns a list of menus
- *    summary: Get a list of all menus
+ *    description: Returns a list of foods
+ *    summary: Get a list of all foods
  *    security:
  *      - okta: []
  *    tags:
- *      - menu
+ *      - food
  *    responses:
  *      200:
- *        description: array of menus
+ *        description: array of foods
  *        content:
  *          application/json:
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Menu'
+ *                $ref: '#/components/schemas/food'
  *              example:
  *                - id: '00uhjfrwdWAQvD8JV4x6'
- *                  name: 'Breakfast Menu'
+ *                  name: 'Breakfast food'
  *                - id: '013e4ab94d96542e791f'
- *                  name: 'Lunch Menu'
+ *                  name: 'Lunch food'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', function (req, res) {
-  Menus.findAll()
-    .then((menus) => {
-      res.status(200).json(menus);
+  Foods.findAll()
+    .then((foods) => {
+      res.status(200).json(foods);
     })
     .catch((err) => {
       console.log(err);
@@ -65,45 +64,45 @@ router.get('/', function (req, res) {
  * @swagger
  * components:
  *  parameters:
- *    menuId:
+ *    foodId:
  *      name: id
  *      in: path
- *      description: ID of the menu to return
+ *      description: ID of the food to return
  *      required: true
  *      example: 00uhjfrwdWAQvD8JV4x6
  *      schema:
  *        type: string
  *
- * /menu/{id}:
+ * /food/{id}:
  *  get:
- *    description: Find menus by ID
- *    summary: Returns a single menu
+ *    description: Find foods by ID
+ *    summary: Returns a single food
  *    security:
  *      - okta: []
  *    tags:
- *      - menu
+ *      - food
  *    parameters:
- *      - $ref: '#/components/parameters/menuId'
+ *      - $ref: '#/components/parameters/foodId'
  *    responses:
  *      200:
- *        description: A menu object
+ *        description: A food object
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Menu'
+ *              $ref: '#/components/schemas/food'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
- *        description: 'Menu not found'
+ *        description: 'food not found'
  */
 router.get('/:id', function (req, res) {
   const id = String(req.params.id);
-  Menus.findById(id)
-    .then((menu) => {
-      if (menu) {
-        res.status(200).json(menu);
+  Foods.findById(id)
+    .then((food) => {
+      if (food) {
+        res.status(200).json(food);
       } else {
-        res.status(404).json({ error: 'MenuNotFound' });
+        res.status(404).json({ error: 'foodNotFound' });
       }
     })
     .catch((err) => {
@@ -113,87 +112,28 @@ router.get('/:id', function (req, res) {
 
 /**
  * @swagger
- * components:
- *  parameters:
- *    menuId:
- *      name: id
- *      in: path
- *      description: ID of the menu to return
- *      required: true
- *      example: 00uhjfrwdWAQvD8JV4x6
- *      schema:
- *        type: string
- *
- * /menu/{id}:
- *  get:
- *    description: Find menus by ID
- *    summary: Returns a single menu
- *    security:
- *      - okta: []
- *    tags:
- *      - menu
- *    parameters:
- *      - $ref: '#/components/parameters/menuId'
- *    responses:
- *      200:
- *        description: A menu object
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Menu'
- *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
- *      404:
- *        description: 'Menu not found'
- */
-
-router.get('/:id/foods', function (req, res) {
-  const id = String(req.params.id);
-  Menus.findById(id)
-    .then((menu) => {
-      if (menu) {
-        Food.findByMenuId(menu.id)
-          .then((foods) => {
-            menu = { ...menu, foods };
-            res.status(200).json(menu);
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(500).json({ message: err.message });
-          });
-      } else {
-        res.status(404).json({ error: 'MenuNotFound' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
-
-/**
- * @swagger
- * /menu:
+ * /food:
  *  post:
- *    summary: Add a menu
+ *    summary: Add a food
  *    security:
  *      - okta: []
  *    tags:
- *      - menu
+ *      - food
  *    requestBody:
- *      description: Menu object to to be added
+ *      description: food object to to be added
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Menu'
+ *            $ref: '#/components/schemas/food'
  *    responses:
  *      400:
  *        $ref: '#/components/responses/BadRequest'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
- *        description: 'Menu not found'
+ *        description: 'food not found'
  *      200:
- *        description: A menu object
+ *        description: A food object
  *        content:
  *          application/json:
  *            schema:
@@ -202,24 +142,24 @@ router.get('/:id/foods', function (req, res) {
  *                message:
  *                  type: string
  *                  description: A message about the result
- *                  example: menu created
- *                menu:
- *                  $ref: '#/components/schemas/Menu'
+ *                  example: food created
+ *                food:
+ *                  $ref: '#/components/schemas/food'
  */
 
 router.post('/', authRequired, async (req, res) => {
-  const menu = req.body;
-  if (menu) {
-    const id = menu.id || 0;
+  const food = req.body;
+  if (food) {
+    const id = food.id || 0;
     try {
-      await Menus.findById(id).then(async (pf) => {
+      await Foods.findById(id).then(async (pf) => {
         if (pf == undefined) {
-          //menu not found so lets insert it
-          await Menus.create(menu).then((menu) =>
-            res.status(200).json({ message: 'menu created', menu: menu[0] })
+          //food not found so lets insert it
+          await Foods.create(food).then((food) =>
+            res.status(200).json({ message: 'food created', food: food[0] })
           );
         } else {
-          res.status(400).json({ message: 'menu already exists' });
+          res.status(400).json({ message: 'food already exists' });
         }
       });
     } catch (e) {
@@ -227,31 +167,31 @@ router.post('/', authRequired, async (req, res) => {
       res.status(500).json({ message: e.message });
     }
   } else {
-    res.status(404).json({ message: 'Menu missing' });
+    res.status(404).json({ message: 'food missing' });
   }
 });
 /**
  * @swagger
- * /menu:
+ * /food:
  *  put:
- *    summary: Update a menu
+ *    summary: Update a food
  *    security:
  *      - okta: []
  *    tags:
- *      - menu
+ *      - food
  *    requestBody:
- *      description: Menu object to to be updated
+ *      description: food object to to be updated
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Menu'
+ *            $ref: '#/components/schemas/food'
  *    responses:
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        $ref: '#/components/responses/NotFound'
  *      200:
- *        description: A menu object
+ *        description: A food object
  *        content:
  *          application/json:
  *            schema:
@@ -260,30 +200,30 @@ router.post('/', authRequired, async (req, res) => {
  *                message:
  *                  type: string
  *                  description: A message about the result
- *                  example: menu created
- *                menu:
- *                  $ref: '#/components/schemas/Menu'
+ *                  example: food created
+ *                food:
+ *                  $ref: '#/components/schemas/food'
  */
 router.put('/', authRequired, (req, res) => {
-  const menu = req.body;
-  if (menu) {
-    const id = menu.id || 0;
-    Menus.findById(id)
+  const food = req.body;
+  if (food) {
+    const id = food.id || 0;
+    Foods.findById(id)
       .then(
-        Menus.update(id, menu)
+        Foods.update(id, food)
           .then((updated) => {
-            res.status(200).json({ message: 'menu created', menu: updated[0] });
+            res.status(200).json({ message: 'food created', food: updated[0] });
           })
           .catch((err) => {
             res.status(500).json({
-              message: `Could not update menu '${id}'`,
+              message: `Could not update food '${id}'`,
               error: err.message,
             });
           })
       )
       .catch((err) => {
         res.status(404).json({
-          message: `Could not find menu '${id}'`,
+          message: `Could not find food '${id}'`,
           error: err.message,
         });
       });
@@ -291,22 +231,22 @@ router.put('/', authRequired, (req, res) => {
 });
 /**
  * @swagger
- * /menu/{id}:
+ * /food/{id}:
  *  delete:
- *    summary: Remove a menu
+ *    summary: Remove a food
  *    security:
  *      - okta: []
  *    tags:
- *      - menu
+ *      - food
  *    parameters:
- *      - $ref: '#/components/parameters/menuId'
+ *      - $ref: '#/components/parameters/foodId'
  *    responses:
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        $ref: '#/components/responses/NotFound'
  *      200:
- *        description: A menu object
+ *        description: A food object
  *        content:
  *          application/json:
  *            schema:
@@ -315,23 +255,23 @@ router.put('/', authRequired, (req, res) => {
  *                message:
  *                  type: string
  *                  description: A message about the result
- *                  example: Menu '00uhjfrwdWAQvD8JV4x6' was deleted.
- *                menu:
- *                  $ref: '#/components/schemas/Menu'
+ *                  example: food '00uhjfrwdWAQvD8JV4x6' was deleted.
+ *                food:
+ *                  $ref: '#/components/schemas/food'
  */
 router.delete('/:id', authRequired, (req, res) => {
   const id = req.params.id;
   try {
-    Menus.findById(id).then((menu) => {
-      Menus.remove(menu.id).then(() => {
+    Foods.findById(id).then((food) => {
+      Foods.remove(food.id).then(() => {
         res
           .status(200)
-          .json({ message: `Menu '${id}' was deleted.`, menu: menu });
+          .json({ message: `food '${id}' was deleted.`, food: food });
       });
     });
   } catch (err) {
     res.status(500).json({
-      message: `Could not delete menu with ID: ${id}`,
+      message: `Could not delete food with ID: ${id}`,
       error: err.message,
     });
   }
